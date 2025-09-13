@@ -218,7 +218,7 @@ function displayQwenResponse(response) {
   
   // 检查是否是验证页面内容
   if (response.includes("访问验证") && response.includes("拖动到最右边")) {
-    console.log("检测到验证页面内容，显示提示信息");
+    console.log("检测到验证页面内容，嵌入验证卡片");
     
     // 显示"打开原页面"按钮
     const openButton = container.querySelector('#open-original-page');
@@ -226,16 +226,41 @@ function displayQwenResponse(response) {
       openButton.style.display = 'block';
     }
     
-    // 更新内容，提示用户需要完成验证
+    // 创建验证卡片
     const contentElement = container.querySelector('.qwen-content');
     contentElement.innerHTML = `
-      <div>
+      <div class="qwen-captcha-container">
         <p>Qwen AI 要求完成验证后才能继续访问。</p>
-        <p>请点击"打开原页面"按钮，在新标签页中完成验证。</p>
+        <div class="qwen-captcha-card">
+          <iframe src="https://chat.qwen.ai" style="width: 100%; height: 500px; border: none;"></iframe>
+        </div>
+        <p>如果上面的验证框无法正常工作，请点击"打开原页面"按钮在新标签页中完成验证。</p>
       </div>
     `;
     
-    console.log("已更新验证提示信息");
+    // 添加验证卡片样式
+    const style = document.createElement('style');
+    style.textContent = `
+      .qwen-captcha-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      
+      .qwen-captcha-card {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin: 10px 0;
+        overflow: hidden;
+      }
+      
+      .qwen-captcha-card iframe {
+        width: 100%;
+        height: 500px;
+        border: none;
+      }
+    `;
+    contentElement.appendChild(style);
+    
+    console.log("已嵌入验证卡片");
   } else {
     // 更新内容
     container.querySelector('.qwen-content').innerHTML = response;
