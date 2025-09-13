@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Bing to Qwen AI Search",
+  "version": "1.0",
+  "description": "当在 Bing 搜索时，同时在 Qwen AI 上搜索相同内容并显示结果",
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://cn.bing.com/*",
+    "https://chat.qwen.ai/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://cn.bing.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.svg",
+    "default_title": "Bing to Qwen AI Search"
+  }
+}
