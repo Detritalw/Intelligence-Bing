@@ -171,10 +171,8 @@ function displayQwenLoading() {
   container.querySelector('#close-qwen-response').style.cssText = buttonStyle;
   
   container.querySelector('.qwen-content').style.cssText = `
-    background: white;
-    padding: 10px;
-    border-radius: 3px;
-    border: 1px solid #ccc;
+    background-color: white;
+    color: black;
   `;
   
   // 添加关闭按钮功能

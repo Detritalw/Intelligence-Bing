@@ -39,12 +39,8 @@
 }
 
 #qwen-ai-response .qwen-content {
-  background: white;
-  padding: 10px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  line-height: 1.5;
+    background-color: white;
+    color: black;
 }
 /* 代码块样式 */
 #qwen-ai-response .qwen-content pre {

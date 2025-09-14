@@ -25,7 +25,16 @@ jobs:
       shell: pwsh
       run: |
         # Create a clean zip file with only the necessary files
-        Compress-Archive -Path ./* -DestinationPath bing-ai-assistant-extension.zip -Exclude "*.git*", "*github/workflows*", "*DS_Store*", "README.md"
+        # First, get all files in the directory
+        $files = Get-ChildItem -Path . -Recurse | Where-Object {
+          $_.FullName -notlike "*.git*" -and
+          $_.FullName -notlike "*github\workflows*" -and
+          $_.Name -ne "README.md" -and
+          $_.Name -ne "DS_Store"
+        }
+        
+        # Create the zip file
+        Compress-Archive -Path $files.FullName -DestinationPath bing-ai-assistant-extension.zip
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
