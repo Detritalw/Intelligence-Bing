@@ -1,0 +1,75 @@
+name: Build Chrome Extension
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Zip extension files
+      run: |
+        # Create a clean zip file with only the necessary files
+        zip -r bing-ai-assistant-extension.zip . -x "*.git*" "*github/workflows*" "*DS_Store*" "README.md"
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: bing-ai-assistant-extension
+        path: bing-ai-assistant-extension.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Get version from manifest.json
+      id: get_version
+      run: |
+        VERSION=$(jq -r '.version' manifest.json)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+    - name: Zip extension files
+      run: |
+        # Create a clean zip file with only the necessary files
+        zip -r bing-ai-assistant-extension.zip . -x "*.git*" "*github/workflows*" "*DS_Store*" "README.md"
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ env.VERSION }}
+        release_name: Release v${{ env.VERSION }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bing-ai-assistant-extension.zip
+        asset_name: bing-ai-assistant-extension-v${{ env.VERSION }}.zip
+        asset_content_type: application/zip
