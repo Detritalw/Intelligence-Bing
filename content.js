@@ -127,74 +127,79 @@ function displayQwenLoading() {
     existingContainer.remove();
   }
   
-  // 创建容器元素
-  const container = document.createElement('div');
-  container.id = 'qwen-ai-response';
-  container.innerHTML = `
-    <div class="qwen-header">
-      <h3>AI 回复</h3>
-      <div class="qwen-buttons">
-        <button id="close-qwen-response">关闭</button>
+  // 获取用户配置的模型名称
+  chrome.storage.local.get(['model'], function(result) {
+    const modelName = result.model || "AI 回复";
+    
+    // 创建容器元素
+    const container = document.createElement('div');
+    container.id = 'qwen-ai-response';
+    container.innerHTML = `
+      <div class="qwen-header">
+        <h3>${modelName}</h3>
+        <div class="qwen-buttons">
+          <button id="close-qwen-response">关闭</button>
+        </div>
       </div>
-    </div>
-    <div class="qwen-content">加载中...</div>
-  `;
-  
-  // 添加样式
-  container.style.cssText = `
-    width: 100%;
-    background: #f0f8ff;
-    border: 1px solid #0078d4;
-    border-radius: 4px;
-    margin: 10px 0;
-    padding: 15px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-sizing: border-box;
-  `;
-  
-  container.querySelector('.qwen-header').style.cssText = `
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  `;
-  
-  const buttonStyle = `
-    background: #0078d4;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-  `;
-  
-  container.querySelector('#close-qwen-response').style.cssText = buttonStyle;
-  
-  container.querySelector('.qwen-content').style.cssText = `
-    background-color: #F2F8FF;
-    color: black;
-  `;
-  
-  // 添加关闭按钮功能
-  container.querySelector('#close-qwen-response').addEventListener('click', function() {
-    console.log("用户点击关闭按钮");
-    container.remove();
-  });
-  
-  // 尝试将容器添加到必应右侧边栏
-  try {
-    insertContainerInSidebar(container);
-  } catch (e) {
-    console.error("插入节点时出错:", e);
-    // 最后的备选方案：添加到body开头
-    if (document.body.firstChild) {
-      document.body.insertBefore(container, document.body.firstChild);
-    } else {
-      document.body.appendChild(container);
+      <div class="qwen-content">加载中...</div>
+    `;
+    
+    // 添加样式
+    container.style.cssText = `
+      width: 100%;
+      background: #f0f8ff;
+      border: 1px solid #0078d4;
+      border-radius: 4px;
+      margin: 10px 0;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      box-sizing: border-box;
+    `;
+    
+    container.querySelector('.qwen-header').style.cssText = `
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    `;
+    
+    const buttonStyle = `
+      background: #0078d4;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+    `;
+    
+    container.querySelector('#close-qwen-response').style.cssText = buttonStyle;
+    
+    container.querySelector('.qwen-content').style.cssText = `
+      background-color: #F2F8FF;
+      color: black;
+    `;
+    
+    // 添加关闭按钮功能
+    container.querySelector('#close-qwen-response').addEventListener('click', function() {
+      console.log("用户点击关闭按钮");
+      container.remove();
+    });
+    
+    // 尝试将容器添加到必应右侧边栏
+    try {
+      insertContainerInSidebar(container);
+    } catch (e) {
+      console.error("插入节点时出错:", e);
+      // 最后的备选方案：添加到body开头
+      if (document.body.firstChild) {
+        document.body.insertBefore(container, document.body.firstChild);
+      } else {
+        document.body.appendChild(container);
+      }
     }
-  }
-  
-  console.log("Qwen AI 加载状态已显示在页面上");
+    
+    console.log("Qwen AI 加载状态已显示在页面上");
+  });
 }
 
 // 在必应右侧边栏插入容器
@@ -259,25 +264,34 @@ function displayQwenResponse(response) {
     return;
   }
   
-  // 根据响应内容调整显示样式
-  const contentElement = container.querySelector('.qwen-content');
-  if (response.includes("获取 AI 回复时出错") || response.includes("网络连接错误") || response.includes("认证失败")) {
-    contentElement.style.color = "#d32f2f";
-    contentElement.style.fontWeight = "bold";
-    // 错误信息直接显示，不进行 Markdown 解析
-    contentElement.innerHTML = response;
-  } else {
-    // 对正常回复进行 Markdown 解析
-    renderMarkdown(response).then(html => {
-      contentElement.innerHTML = html;
-    }).catch(error => {
-      console.error("Markdown 渲染出错:", error);
-      // 如果渲染出错，直接显示原始文本
+  // 更新标题为模型名称
+  chrome.storage.local.get(['model'], function(result) {
+    const modelName = result.model || "AI 回复";
+    const header = container.querySelector('.qwen-header h3');
+    if (header) {
+      header.textContent = modelName;
+    }
+    
+    // 根据响应内容调整显示样式
+    const contentElement = container.querySelector('.qwen-content');
+    if (response.includes("获取 AI 回复时出错") || response.includes("网络连接错误") || response.includes("认证失败")) {
+      contentElement.style.color = "#d32f2f";
+      contentElement.style.fontWeight = "bold";
+      // 错误信息直接显示，不进行 Markdown 解析
       contentElement.innerHTML = response;
-    });
-  }
-  
-  console.log("Qwen AI 回复已显示在页面上");
+    } else {
+      // 对正常回复进行 Markdown 解析
+      renderMarkdown(response).then(html => {
+        contentElement.innerHTML = html;
+      }).catch(error => {
+        console.error("Markdown 渲染出错:", error);
+        // 如果渲染出错，直接显示原始文本
+        contentElement.innerHTML = response;
+      });
+    }
+    
+    console.log("Qwen AI 回复已显示在页面上");
+  });
 }
 
 // Markdown 渲染函数
