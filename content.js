@@ -171,7 +171,7 @@ function displayQwenLoading() {
   container.querySelector('#close-qwen-response').style.cssText = buttonStyle;
   
   container.querySelector('.qwen-content').style.cssText = `
-    background-color: white;
+    background-color: #F2F8FF;
     color: black;
   `;
   
