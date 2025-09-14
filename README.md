@@ -166,18 +166,16 @@
 
 如遇到问题，请提交 issue 或联系开发者。
 
-# Intelligence-Bing
+# Bing AI Assistant
 
-一个在必应搜索结果页面中集成 Qwen AI 回复的浏览器扩展。
+一个在必应搜索结果页面中集成 AI 回复的浏览器扩展。
 
 ## 功能
 
 1. 在必应搜索结果页面中自动检测搜索查询
-2. 在后台打开 Qwen AI 页面并获取回复
-3. 在必应搜索结果页面上显示 Qwen AI 的回复
-4. 在发送请求前就在页面上显示加载状态，提升用户体验
-5. 提供"打开原页面"按钮，可以打开后台访问的 Qwen AI 页面
-6. 当 Qwen AI 要求验证时，自动嵌入验证卡片到页面中
+2. 向 SiliconFlow API 发送请求获取 AI 回复
+3. 在必应页面右侧边栏显示 AI 回复内容
+4. 可配置模型、最大token数、提示词等参数
 
 ## 安装
 
@@ -190,34 +188,53 @@
 ## 使用方法
 
 1. 安装扩展后，在必应搜索任何内容
-2. 扩展会自动在搜索结果页面上显示 Qwen AI 的回复
+2. 扩展会自动在搜索结果页面右侧边栏显示 AI 回复
 3. 点击"关闭"按钮可以关闭回复框
-4. 点击"打开原页面"按钮可以查看后台访问的完整 Qwen AI 页面
-5. 如果 Qwen AI 要求验证，扩展会自动嵌入验证卡片到页面中，用户可以直接在必应页面上完成验证
+4. 通过点击扩展图标可以启用或禁用插件
+5. 通过扩展弹出窗口可以配置模型参数
+
+## 配置选项
+
+在扩展的弹出窗口中，可以配置以下参数：
+
+1. **模型**: 选择要使用的 AI 模型
+   - Qwen/Qwen3-8B (默认)
+   - Qwen/Qwen2-72B
+   - Qwen/Qwen2-7B
+   - Qwen/Qwen2-1.5B
+   - Qwen/Qwen2-0.5B
+
+2. **最大 Token 数**: 设置 AI 回复的最大长度 (1-4096)
+
+3. **提示词前缀**: 在用户查询前添加自定义提示词，例如："请用中文回答以下问题"
+
+4. **Authorization Token**: 用于访问 SiliconFlow API 的认证令牌
 
 ## 文件说明
 
 - `manifest.json`: 扩展的配置文件
 - `content.js`: 在必应页面上运行的脚本，用于检测搜索和显示回复
-- `background.js`: 后台脚本，用于在后台打开 Qwen AI 页面并提取回复
+- `background.js`: 后台脚本，用于向 SiliconFlow API 发送请求
 - `popup.html`: 扩展弹出页面的 HTML
 - `popup.js`: 扩展弹出页面的 JavaScript
 - `styles.css`: 扩展的样式文件
 - `icon.svg`: 扩展的图标文件
+- `diagnostic.html`: 网络诊断工具页面
+- `diagnostic.js`: 网络诊断工具脚本
 
 ## 工作原理
 
 1. `content.js` 检测必应搜索页面的查询参数
 2. 将查询发送到 `background.js`
-3. `background.js` 在隐藏窗口中打开 Qwen AI 页面
-4. 提取 Qwen AI 的回复内容
-5. 将回复内容发送回 `content.js`
-6. `content.js` 在必应页面上显示回复
-7. 用户可以点击"打开原页面"按钮查看完整的 Qwen AI 页面
+3. `background.js` 向 SiliconFlow API (https://api.siliconflow.cn/v1/chat/completions) 发送请求
+4. API 返回 AI 回复内容
+5. `background.js` 将回复内容发送回 `content.js`
+6. `content.js` 在必应页面右侧边栏显示回复内容
 
 ## 注意事项
 
-- 扩展需要网络连接以访问 Qwen AI 页面
-- 由于需要在后台加载页面，回复可能需要几秒钟时间
-- 如果 Qwen AI 页面结构发生变化，可能需要更新内容提取逻辑
-- 当 Qwen AI 要求验证时，扩展会自动嵌入验证卡片到页面中，用户可以直接完成验证
+- 扩展需要网络连接以访问 SiliconFlow API
+- 回复可能需要几秒钟时间加载
+- 如果 API 结构发生变化，可能需要更新内容提取逻辑
+- 配置保存在浏览器本地存储中
+- 默认的 Authorization Token 仅供测试使用，建议替换为自己的 Token

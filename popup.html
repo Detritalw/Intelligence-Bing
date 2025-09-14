@@ -4,30 +4,31 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 300px;
+      width: 350px;
       padding: 20px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: Arial, sans-serif;
     }
     
-    h3 {
-      color: #0078d4;
+    h1 {
+      font-size: 18px;
       margin-top: 0;
     }
     
-    .status {
-      padding: 10px;
-      border-radius: 3px;
+    #status {
       margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+      text-align: center;
     }
     
-    .status.enabled {
-      background-color: #dff6dd;
-      border: 1px solid #207a1f;
+    .enabled {
+      background-color: #d4edda;
+      color: #155724;
     }
     
-    .status.disabled {
-      background-color: #fde7e9;
-      border: 1px solid #a80000;
+    .disabled {
+      background-color: #f8d7da;
+      color: #721c24;
     }
     
     button {
@@ -36,43 +37,124 @@
       background-color: #0078d4;
       color: white;
       border: none;
-      border-radius: 3px;
+      border-radius: 4px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
+      margin: 5px 0;
     }
     
     button:hover {
-      background-color: #005a9e;
+      background-color: #106ebe;
     }
     
-    .info {
+    .config-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .config-section h2 {
+      font-size: 16px;
+      margin-top: 0;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    .form-group textarea {
+      height: 80px;
+      resize: vertical;
+    }
+    
+    .test-result {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .test-success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .test-error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .footer {
+      margin-top: 20px;
       font-size: 12px;
       color: #666;
-      margin-top: 15px;
+      text-align: center;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .model-note {
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <h3>Bing to Qwen AI Search</h3>
+  <h1>Bing AI Assistant</h1>
+  <div id="status" class="enabled">插件已启用</div>
+  <button id="toggle">禁用插件</button>
   
-  <div class="status enabled">
-    插件已启用
+  <div class="config-section">
+    <h2>配置选项</h2>
+    <div class="form-group">
+      <label for="model">模型:</label>
+      <input type="text" id="model" placeholder="请输入模型名称，例如: Qwen/Qwen3-8B">
+      <div class="model-note">
+        常用模型: Qwen/Qwen3-8B, Qwen/Qwen2-72B, Qwen/Qwen2-7B, Qwen/Qwen2-1.5B, Qwen/Qwen2-0.5B
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="maxTokens">最大 Token 数:</label>
+      <input type="number" id="maxTokens" min="1" max="4096" value="2048">
+    </div>
+    
+    <div class="form-group">
+      <label for="promptPrefix">提示词前缀:</label>
+      <textarea id="promptPrefix" placeholder="请输入提示词前缀，例如：请用中文回答以下问题"></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label for="authToken">Authorization Token:</label>
+      <input type="password" id="authToken" placeholder="请输入 Authorization Token">
+    </div>
+    
+    <button id="saveConfig">保存配置</button>
+    <button id="testConnection">测试 API 连接</button>
+    <div id="testResult" class="test-result"></div>
   </div>
   
-  <p>当您在 Bing 上搜索时，插件会自动在 Qwen AI 上执行相同搜索并将结果展示在 Bing 页面顶部。</p>
-  
-  <button id="toggle-extension">插件设置</button>
-  
-  <div class="info">
-    <p>使用说明：</p>
-    <ol>
-      <li>在 Bing (cn.bing.com) 上进行搜索</li>
-      <li>插件会自动获取搜索关键词</li>
-      <li>自动在 Qwen AI 上执行搜索</li>
-      <li>结果将显示在 Bing 页面顶部</li>
-    </ol>
+  <div class="footer">
+    在必应搜索时自动显示 AI 回复
   </div>
-  
   <script src="popup.js"></script>
 </body>
 </html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>网络诊断工具</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    
+    button {
+      background-color: #0078d4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background-color: #106ebe;
+    }
+    
+    .result {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+  </style>
+</head>
+<body>
+  <h1>网络诊断工具</h1>
+  
+  <div class="test-section">
+    <h2>浏览器网络状态</h2>
+    <button id="checkNetwork">检查网络状态</button>
+    <div id="networkResult" class="result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>DNS 解析测试</h2>
+    <button id="checkDNS">检查 deepseek2chatbox.dawne.cn DNS</button>
+    <div id="dnsResult" class="result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>API 连接测试</h2>
+    <button id="checkAPI">测试 API 连接</button>
+    <div id="apiResult" class="result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>完整诊断</h2>
+    <button id="fullDiagnostic">运行完整诊断</button>
+    <div id="fullResult" class="result"></div>
+  </div>
+  
+  <script src="diagnostic.js"></script>
+</body>
+</html>

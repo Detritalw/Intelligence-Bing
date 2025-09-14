@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Bing to Qwen AI Search",
+  "name": "Bing AI Assistant",
   "version": "1.0",
-  "description": "当在 Bing 搜索时，同时在 Qwen AI 上搜索相同内容并显示结果",
+  "description": "在必应搜索结果页面中集成 AI 回复",
   "icons": {
     "16": "icon.svg",
     "48": "icon.svg",
@@ -15,7 +15,7 @@
   ],
   "host_permissions": [
     "https://cn.bing.com/*",
-    "https://chat.qwen.ai/*"
+    "https://api.siliconflow.cn/*"
   ],
   "content_scripts": [
     {
@@ -31,6 +31,12 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": "icon.svg",
-    "default_title": "Bing to Qwen AI Search"
-  }
+    "default_title": "Bing AI Assistant"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["diagnostic.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
